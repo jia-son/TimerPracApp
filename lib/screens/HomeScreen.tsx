@@ -6,6 +6,7 @@ import Icon from 'react-native-vector-icons/Fontisto';
 export function HomeScreen() {
   const [seconds, setSeconds] = useState(0);
   const [isActive, setIsActive] = useState(false);
+  const [initailTime, setInitilaTime] = useState(0);
 
   useEffect(() => {
     var interval: any;
@@ -27,13 +28,24 @@ export function HomeScreen() {
   const formattedTime = () => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    return `${String(minutes).padStart(2, '0')}:${String(
-      remainingSeconds,
-    ).padStart(2, '0')}`;
+
+    if (minutes > 59) {
+      const hour = Math.floor(minutes / 60);
+      const minute = minutes % 60;
+      return `${String(hour).padStart(2, '0')}:${String(minute).padStart(
+        2,
+        '0',
+      )}:${String(remainingSeconds).padStart(2, '0')}`;
+    } else {
+      return `${String(minutes).padStart(2, '0')}:${String(
+        remainingSeconds,
+      ).padStart(2, '0')}`;
+    }
   };
 
-  const timeSetting = () => {
-    setSeconds(2700);
+  const timeSetting = (time: number) => {
+    setSeconds(time);
+    setInitilaTime(time);
   };
 
   const handleIsActive = () => {
@@ -41,7 +53,7 @@ export function HomeScreen() {
   };
 
   const handleReset = () => {
-    timeSetting();
+    timeSetting(initailTime);
     setIsActive(false);
   };
 
@@ -49,9 +61,19 @@ export function HomeScreen() {
     <View style={styles.mainContainer}>
       <View style={styles.timer}>
         <Text style={styles.text}>{formattedTime()}</Text>
-        <TouchableOpacity onPress={() => timeSetting()}>
+        <TouchableOpacity onPress={() => (isActive ? null : timeSetting(2700))}>
           <Text style={{...styles.text, fontSize: 18, paddingTop: 50}}>
-            시간 선택
+            기본 시간
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => (isActive ? null : timeSetting(3600))}>
+          <Text style={{...styles.text, fontSize: 18, paddingTop: 50}}>
+            1시간
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => (isActive ? null : timeSetting(5400))}>
+          <Text style={{...styles.text, fontSize: 18, paddingTop: 50}}>
+            1시간 30분
           </Text>
         </TouchableOpacity>
       </View>
