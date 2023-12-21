@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Fontisto';
+import RNPickerSelect from 'react-native-picker-select';
 
 export function HomeScreen() {
   const [seconds, setSeconds] = useState(0);
@@ -61,21 +62,14 @@ export function HomeScreen() {
     <View style={styles.mainContainer}>
       <View style={styles.timer}>
         <Text style={styles.text}>{formattedTime()}</Text>
-        <TouchableOpacity onPress={() => (isActive ? null : timeSetting(2700))}>
-          <Text style={{...styles.text, fontSize: 18, paddingTop: 50}}>
-            기본 시간
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => (isActive ? null : timeSetting(3600))}>
-          <Text style={{...styles.text, fontSize: 18, paddingTop: 50}}>
-            1시간
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => (isActive ? null : timeSetting(5400))}>
-          <Text style={{...styles.text, fontSize: 18, paddingTop: 50}}>
-            1시간 30분
-          </Text>
-        </TouchableOpacity>
+        <RNPickerSelect
+          onValueChange={value => (isActive ? null : timeSetting(value))}
+          items={[
+            {label: '기본 시간', value: 2700},
+            {label: '1시간', value: 3600},
+            {label: '1시간 30분', value: 5400},
+          ]}
+        />
       </View>
       <View style={styles.btnContainer}>
         <TouchableOpacity onPress={handleIsActive}>
@@ -136,5 +130,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     paddingBottom: 100,
+  },
+  pickerStyle: {
+    marginTop: 50,
   },
 });
