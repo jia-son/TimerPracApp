@@ -62,14 +62,18 @@ export function HomeScreen() {
     <View style={styles.mainContainer}>
       <View style={styles.timer}>
         <Text style={styles.text}>{formattedTime()}</Text>
-        <RNPickerSelect
-          onValueChange={value => (isActive ? null : timeSetting(value))}
-          items={[
-            {label: '기본 시간', value: 2700},
-            {label: '1시간', value: 3600},
-            {label: '1시간 30분', value: 5400},
-          ]}
-        />
+        <View style={styles.pickerStyle}>
+          <RNPickerSelect
+            useNativeAndroidPickerStyle={false}
+            darkTheme={true}
+            onValueChange={value => (isActive ? null : timeSetting(value))}
+            items={[
+              {label: '기본 시간', value: 2700},
+              {label: '1시간', value: 3600},
+              {label: '1시간 30분', value: 5400},
+            ]}
+          />
+        </View>
       </View>
       <View style={styles.btnContainer}>
         <TouchableOpacity onPress={handleIsActive}>
