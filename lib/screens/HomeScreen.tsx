@@ -2,7 +2,8 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Fontisto';
-import RNPickerSelect from 'react-native-picker-select';
+// import RNPickerSelect from 'react-native-picker-select';
+import {WheelPicker} from '../component/WheelPicker';
 
 export function HomeScreen() {
   const [seconds, setSeconds] = useState(0);
@@ -62,16 +63,29 @@ export function HomeScreen() {
     <View style={styles.mainContainer}>
       <View style={styles.timer}>
         <Text style={styles.text}>{formattedTime()}</Text>
-        <View style={styles.pickerStyle}>
-          <RNPickerSelect
+        <View style={{...styles.pickerStyle, height: 36 * 3}}>
+          {/* <RNPickerSelect
             useNativeAndroidPickerStyle={false}
-            darkTheme={true}
             onValueChange={value => (isActive ? null : timeSetting(value))}
             items={[
               {label: '기본 시간', value: 2700},
               {label: '1시간', value: 3600},
               {label: '1시간 30분', value: 5400},
             ]}
+          /> */}
+          <WheelPicker
+            itemHeight={36}
+            items={['기본 시간', '1시간', '1시간 30분']}
+            onItemChange={item => {
+              if (item === '기본 시간') {
+                timeSetting(2700);
+              } else if (item === '1시간') {
+                timeSetting(3600);
+              } else {
+                timeSetting(5400);
+              }
+            }}
+            initValue={'기본 시간'}
           />
         </View>
       </View>
