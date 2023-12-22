@@ -63,9 +63,9 @@ export function HomeScreen() {
     <View style={styles.mainContainer}>
       <View style={styles.timer}>
         <Text style={styles.text}>{formattedTime()}</Text>
-        <View style={{...styles.pickerStyle, height: 36 * 3}}>
+        <View style={{...styles.pickerStyle, height: 20 * 3}}>
           <WheelPicker
-            itemHeight={36}
+            itemHeight={40}
             items={['기본 시간', '1시간', '1시간 30분']}
             onItemChange={item => {
               if (item === '기본 시간') {
