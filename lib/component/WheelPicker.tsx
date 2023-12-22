@@ -2,11 +2,11 @@ import React, {useEffect, useRef, useState} from 'react';
 import {
   Animated,
   ListRenderItemInfo,
-  ViewStyle,
-  Text,
-  NativeSyntheticEvent,
   NativeScrollEvent,
+  NativeSyntheticEvent,
+  Text,
   View,
+  ViewStyle,
 } from 'react-native';
 
 interface Props {
@@ -17,7 +17,7 @@ interface Props {
   containerStyle?: ViewStyle;
 }
 
-export const WheelPicker: React.FC<Props> = props => {
+const WheelPicker: React.FC<Props> = props => {
   const {items, onItemChange, itemHeight, initValue} = props;
   const scrollY = useRef(new Animated.Value(0)).current;
   const initValueIndex = initValue ? items.indexOf(initValue) : -1;
@@ -46,14 +46,7 @@ export const WheelPicker: React.FC<Props> = props => {
             justifyContent: 'center',
           },
         ]}>
-        <Text
-          style={[
-            {
-              color: selectedIndex === item ? 'white' : 'grey',
-            },
-          ]}>
-          {item}
-        </Text>
+        <Text style={{color: 'white'}}>{item}</Text>
       </Animated.View>
     );
   };
@@ -78,10 +71,11 @@ export const WheelPicker: React.FC<Props> = props => {
         data={modifiedItems}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
+        snapToInterval={itemHeight}
         onMomentumScrollEnd={momentumScrollEnd}
         scrollEventThrottle={16}
         onScroll={Animated.event(
-          [{nativeEvent: {contentOffseet: {y: scrollY}}}],
+          [{nativeEvent: {contentOffset: {y: scrollY}}}],
           {useNativeDriver: true},
         )}
         getItemLayout={(_, index) => ({
@@ -94,3 +88,5 @@ export const WheelPicker: React.FC<Props> = props => {
     </View>
   );
 };
+
+export default WheelPicker;

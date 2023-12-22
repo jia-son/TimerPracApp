@@ -1,6 +1,6 @@
-import React, {useRef} from 'react';
-import {Text, View} from 'react-native';
-import {WheelPicker} from './WheelPicker';
+import {View, Text} from 'react-native';
+import WheelPicker from './WheelPicker';
+import {useRef} from 'react';
 
 interface Time {
   ampm: string;
@@ -14,7 +14,7 @@ interface Props {
   initValue?: Time;
 }
 
-export const TimePicker = ({onTimeChange, itemHeight, initValue}: Props) => {
+const TimePicker = ({onTimeChange, itemHeight, initValue}: Props) => {
   const ampmItems = ['AM', 'PM'];
   const hourItems = Array.from({length: 13}, (_, i) =>
     i.toString().padStart(2, '0'),
@@ -28,7 +28,7 @@ export const TimePicker = ({onTimeChange, itemHeight, initValue}: Props) => {
   const selectedHour = useRef('');
   const selectedMinute = useRef('');
 
-  const handleIndexChange = (category: String, item: string) => {
+  const handleIndexChange = (category: string, item: string) => {
     switch (category) {
       case 'ampm':
         selectedAMPM.current = item;
@@ -40,7 +40,7 @@ export const TimePicker = ({onTimeChange, itemHeight, initValue}: Props) => {
         selectedMinute.current = item;
         break;
       default:
-        throw new Error('Invaild time category');
+        throw new Error('Invalid time category');
     }
 
     onTimeChange({
@@ -77,7 +77,7 @@ export const TimePicker = ({onTimeChange, itemHeight, initValue}: Props) => {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        <Text style={{color: 'white'}}>:</Text>
+        <Text style={{color: 'black'}}>:</Text>
       </View>
       <WheelPicker
         items={minuteItems}
@@ -91,7 +91,7 @@ export const TimePicker = ({onTimeChange, itemHeight, initValue}: Props) => {
           position: 'absolute',
           height: itemHeight,
           top: itemHeight,
-          backgroundColor: 'neutal',
+          backgroundColor: 'white',
           left: 0,
           right: 0,
           zIndex: -1,
@@ -100,3 +100,5 @@ export const TimePicker = ({onTimeChange, itemHeight, initValue}: Props) => {
     </View>
   );
 };
+
+export default TimePicker;
