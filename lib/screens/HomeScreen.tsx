@@ -16,16 +16,28 @@ export function HomeScreen() {
   const [totalSeconds, setTotalSeconds] = useState<{
     [key: string]: {seconds: number};
   }>({});
+  const [totlaTime, setTotalTime] = useState(0);
 
   useEffect(() => {
     var interval: any;
+    // const clearAll = async () => {
+    //   try {
+    //     await AsyncStorage.clear();
+    //   } catch (e) {
+    //     // clear error
+    //   }
+
+    //   console.log('Done.');
+    // };
+    // clearAll();
 
     if (isActive) {
       interval = setInterval(() => {
         if (seconds !== 0) {
           setSeconds(prevSeconds => prevSeconds - 1);
         } else {
-          saveToTalSeconds(initailTime);
+          setTotalTime(totlaTime + initailTime);
+          addTotalSecond();
           handleReset();
         }
       }, 1000);
@@ -35,21 +47,25 @@ export function HomeScreen() {
     return () => clearInterval(interval);
   }, [isActive, seconds]);
 
-  const saveToTalSeconds = async (toSecond: number) => {
-    try {
-      const storeTimeGet = await AsyncStorage.getItem(TIMER_STORAGE_KEY);
-      if (storeTimeGet!.length === 0) {
-        setTotalSeconds({['20231227']: {seconds: toSecond}});
-      } else {
-        const json = JSON.parse(storeTimeGet ?? '[]');
-        const newSconds = toSecond + json['20231227'].seconds;
-        setTotalSeconds({['20231227']: {seconds: newSconds}});
-      }
+  const addTotalSecond = async () => {
+    // const newTotalSeconds = Object.assign({}, totalSeconds, {
+    //   ['20231227']: {seconds: totalSeconds['20231227'].seconds + initailTime},
+    // });
+    const newTotalSeconds = {
+      ...totalSeconds,
+      ['20231227']: {
+        ...totalSeconds['20231227'],
+        seconds: totlaTime,
+      },
+    };
 
-      await AsyncStorage.setItem(
-        TIMER_STORAGE_KEY,
-        JSON.stringify(totalSeconds),
-      );
+    setTotalSeconds(newTotalSeconds);
+    await saveToTalSeconds(newTotalSeconds);
+  };
+
+  const saveToTalSeconds = async (toSecond: any) => {
+    try {
+      await AsyncStorage.setItem(TIMER_STORAGE_KEY, JSON.stringify(toSecond));
     } catch (e) {
       console.log(e);
     }

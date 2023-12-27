@@ -14,9 +14,20 @@ export function TimerChart() {
   const loadTotalSeconds = async () => {
     try {
       const storeTimeGet = await AsyncStorage.getItem(TIMER_STORAGE_KEY);
-      setTotalSeconds(JSON.parse(storeTimeGet ?? '[]'));
-      //   setTotalTime(totalSeconds['20231227'].seconds);
-      console.log('저장된 시간:', totalSeconds);
+      //   const parsedTotalSeconds = JSON.parse(storeTimeGet ?? '{}');
+      //   setTotalSeconds(parsedTotalSeconds);
+      //   setTotalTime(parsedTotalSeconds['20231227']?.seconds || 0);
+      //   console.log('저장된 시간:', parsedTotalSeconds);
+
+      if (storeTimeGet?.length === 0) {
+        setTotalSeconds({});
+        setTotalTime(0);
+      } else {
+        setTotalSeconds(JSON.parse(storeTimeGet!));
+        setTotalTime(0);
+        console.log('우리 좋았잖아:', totalSeconds);
+        console.log('아니야?:', totalTime);
+      }
     } catch (e) {
       console.log(e);
     }
@@ -42,7 +53,7 @@ export function TimerChart() {
 
   useEffect(() => {
     loadTotalSeconds();
-  }, [totalTime]);
+  }, []);
 
   return (
     <View style={styles.mainContainer}>
