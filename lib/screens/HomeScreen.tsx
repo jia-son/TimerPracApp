@@ -16,6 +16,15 @@ export function HomeScreen() {
 
   useEffect(() => {
     let interval: any;
+    const clearAll = async () => {
+      try {
+        await AsyncStorage.clear();
+      } catch (e) {
+        console.log(e);
+      }
+
+      console.log('Clear All');
+    };
 
     if (isActive) {
       interval = setInterval(() => {
@@ -29,6 +38,7 @@ export function HomeScreen() {
       clearInterval(interval);
     }
 
+    // clearAll();
     return () => clearInterval(interval);
   }, [isActive, seconds]);
 

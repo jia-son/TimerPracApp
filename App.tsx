@@ -46,7 +46,6 @@ export default function App() {
         }}>
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Todo" component={TodoScreen} />
-        <Stack.Screen name="BottomMenuBar" component={BottomMenuBar} />
         <Stack.Screen name="TimerChart" component={TimerChart} />
       </Stack.Navigator>
     </NavigationContainer>
