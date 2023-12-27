@@ -4,6 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {HomeScreen} from './lib/screens/HomeScreen';
 import {Text, TouchableOpacity, View} from 'react-native';
 import {TodoScreen} from './lib/screens/TodoScreen';
+import {BottomMenuBar} from './lib/screens/BottomMenuBar';
 
 const Stack = createStackNavigator();
 
@@ -44,6 +45,7 @@ export default function App() {
         }}>
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Todo" component={TodoScreen} />
+        <Stack.Screen name="BottomMenuBar" component={BottomMenuBar} />
       </Stack.Navigator>
     </NavigationContainer>
   );

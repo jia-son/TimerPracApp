@@ -5,6 +5,7 @@ import {ScrollView, TextInput} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Modal from 'react-native-modal';
+import {BottomMenuBar} from './BottomMenuBar';
 
 const STORAGE_KEY = '@toDos';
 
@@ -168,20 +169,7 @@ export function TodoScreen() {
           </View>
         </Modal>
       </View>
-      <View style={styles.menuBar}>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.reset({
-              index: 0,
-              routes: [{name: 'Home'}],
-            });
-          }}>
-          <Text style={styles.menuItem}>타이머</Text>
-        </TouchableOpacity>
-        <Text style={styles.menuItem}>시각화</Text>
-        <Text style={styles.menuItem}>투두</Text>
-        <Text style={styles.menuItem}>마이페이지</Text>
-      </View>
+      <BottomMenuBar />
     </View>
   );
 }

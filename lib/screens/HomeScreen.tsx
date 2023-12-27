@@ -4,6 +4,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Fontisto';
 import {useNavigation} from '@react-navigation/native';
 import WheelPicker from '../component/WheelPicker';
+import {BottomMenuBar} from './BottomMenuBar';
 
 export function HomeScreen() {
   const [seconds, setSeconds] = useState(0);
@@ -68,12 +69,14 @@ export function HomeScreen() {
         <View style={{...styles.pickerStyle, height: 20 * 3}}>
           <WheelPicker
             itemHeight={40}
-            items={['기본 시간', '1시간', '1시간 30분']}
+            items={['기본 시간', '1시간', '1시간 30분', '테스트 1분']}
             onItemChange={item => {
               if (item === '기본 시간') {
                 timeSetting(2700);
               } else if (item === '1시간') {
                 timeSetting(3600);
+              } else if (item === '테스트 1분') {
+                timeSetting(60);
               } else {
                 timeSetting(5400);
               }
@@ -98,20 +101,7 @@ export function HomeScreen() {
           </Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.menuBar}>
-        <Text style={styles.menuItem}>타이머</Text>
-        <Text style={styles.menuItem}>시각화</Text>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.reset({
-              index: 0,
-              routes: [{name: 'Todo'}],
-            });
-          }}>
-          <Text style={styles.menuItem}>투두</Text>
-        </TouchableOpacity>
-        <Text style={styles.menuItem}>마이페이지</Text>
-      </View>
+      <BottomMenuBar />
     </View>
   );
 }
