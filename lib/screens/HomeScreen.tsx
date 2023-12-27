@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: '#252321',
-    justifyContent: 'center',
+    paddingHorizontal: 20,
   },
   text: {
     color: 'white',
