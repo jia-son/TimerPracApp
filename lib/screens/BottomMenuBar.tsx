@@ -26,6 +26,15 @@ export function BottomMenuBar() {
     }
   };
 
+  const handleChartPress = () => {
+    if (nowRouteName !== 'TimerChart') {
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'TimerChart'}],
+      });
+    }
+  };
+
   return (
     <View style={styles.menuBar}>
       {nowRouteName === 'Home' ? (
@@ -35,7 +44,13 @@ export function BottomMenuBar() {
           <Text style={styles.menuItem}>타이머</Text>
         </TouchableOpacity>
       )}
-      <Text style={styles.menuItem}>시각화</Text>
+      {nowRouteName === 'TimerChart' ? (
+        <Text style={[styles.menuItem, styles.disabledText]}>시각화</Text>
+      ) : (
+        <TouchableOpacity onPress={handleChartPress}>
+          <Text style={styles.menuItem}>시각화</Text>
+        </TouchableOpacity>
+      )}
       {nowRouteName === 'Todo' ? (
         <Text style={[styles.menuItem, styles.disabledText]}>투두</Text>
       ) : (

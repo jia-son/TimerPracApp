@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {Text, View, StyleSheet, TouchableOpacity, Alert} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 import {ScrollView, TextInput} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -10,8 +9,6 @@ import {BottomMenuBar} from './BottomMenuBar';
 const STORAGE_KEY = '@toDos';
 
 export function TodoScreen() {
-  const navigation = useNavigation();
-
   const [text, setText] = useState('');
   const [toDos, setToDos] = useState<{
     [key: string]: {text: string; done: Boolean};

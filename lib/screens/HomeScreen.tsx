@@ -2,16 +2,20 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Fontisto';
-import {useNavigation} from '@react-navigation/native';
 import WheelPicker from '../component/WheelPicker';
 import {BottomMenuBar} from './BottomMenuBar';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const TIMER_STORAGE_KEY = '@totalSeconds';
 
 export function HomeScreen() {
   const [seconds, setSeconds] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const [initailTime, setInitilaTime] = useState(0);
 
-  const navigation = useNavigation();
+  const [totalSeconds, setTotalSeconds] = useState<{
+    [key: string]: {seconds: number};
+  }>({});
 
   useEffect(() => {
     var interval: any;
@@ -21,6 +25,7 @@ export function HomeScreen() {
         if (seconds !== 0) {
           setSeconds(prevSeconds => prevSeconds - 1);
         } else {
+          saveToTalSeconds(initailTime);
           handleReset();
         }
       }, 1000);
@@ -29,6 +34,14 @@ export function HomeScreen() {
     }
     return () => clearInterval(interval);
   }, [isActive, seconds]);
+
+  const saveToTalSeconds = async (toSecond: number) => {
+    try {
+      await AsyncStorage.setItem(TIMER_STORAGE_KEY, JSON.stringify(toSecond));
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const formattedTime = () => {
     const minutes = Math.floor(seconds / 60);
