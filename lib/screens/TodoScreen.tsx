@@ -4,6 +4,7 @@ import {useNavigation} from '@react-navigation/native';
 import {ScrollView, TextInput} from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Modal from 'react-native-modal';
 
 const STORAGE_KEY = '@toDos';
 
@@ -14,6 +15,10 @@ export function TodoScreen() {
   const [toDos, setToDos] = useState<{
     [key: string]: {text: string; done: Boolean};
   }>({});
+  const [selectKey, setSelectKey] = useState('');
+  const [selectText, setSelectText] = useState('');
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [updateText, setUpdateText] = useState('');
 
   const addToDo = async () => {
     if (text === '') {
@@ -71,6 +76,27 @@ export function TodoScreen() {
     ]);
   };
 
+  const updateToDo = (key: string) => {
+    setSelectKey(key);
+    setSelectText(toDos[selectKey].text);
+    toggleModal();
+  };
+
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
+  };
+
+  const handleUpdate = () => {
+    const newToDos = {
+      ...toDos,
+      [selectKey]: {...toDos[selectKey], text: updateText},
+    };
+
+    setToDos(newToDos);
+    saveToDos(newToDos);
+    toggleModal();
+  };
+
   useEffect(() => {
     loadToDos();
   }, []);
@@ -113,7 +139,7 @@ export function TodoScreen() {
                 <Text style={styles.toDoText}>{toDos[key].text}</Text>
               </View>
               <View style={styles.toDoUpdateBtnAndtrashBtn}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => updateToDo(key)}>
                   <Icon
                     name="lead-pencil"
                     size={20}
@@ -128,6 +154,19 @@ export function TodoScreen() {
             </View>
           ))}
         </ScrollView>
+        <Modal isVisible={isModalVisible} onBackdropPress={toggleModal}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Edit To Do</Text>
+            <TextInput
+              defaultValue={selectText}
+              style={styles.modalInput}
+              onChangeText={text => setUpdateText(text)}
+            />
+            <TouchableOpacity onPress={handleUpdate}>
+              <Icon name="check-bold" size={30} style={styles.updateBtn} />
+            </TouchableOpacity>
+          </View>
+        </Modal>
       </View>
       <View style={styles.menuBar}>
         <TouchableOpacity
@@ -209,5 +248,25 @@ const styles = StyleSheet.create({
   },
   toDoUpdateBtn: {
     paddingRight: 10,
+  },
+  modalContainer: {
+    backgroundColor: 'white',
+    paddingVertical: 25,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    paddingBottom: 20,
+  },
+  modalInput: {
+    height: 40,
+    borderColor: 'black',
+    borderBottomWidth: 1,
+    paddingHorizontal: 100,
+  },
+  updateBtn: {
+    marginTop: 35,
   },
 });
