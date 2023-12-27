@@ -2,13 +2,15 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Fontisto';
-import RNPickerSelect from 'react-native-picker-select';
+import {useNavigation} from '@react-navigation/native';
 import WheelPicker from '../component/WheelPicker';
 
 export function HomeScreen() {
   const [seconds, setSeconds] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const [initailTime, setInitilaTime] = useState(0);
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     var interval: any;
@@ -99,7 +101,15 @@ export function HomeScreen() {
       <View style={styles.menuBar}>
         <Text style={styles.menuItem}>타이머</Text>
         <Text style={styles.menuItem}>시각화</Text>
-        <Text style={styles.menuItem}>투두</Text>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'Todo'}],
+            });
+          }}>
+          <Text style={styles.menuItem}>투두</Text>
+        </TouchableOpacity>
         <Text style={styles.menuItem}>마이페이지</Text>
       </View>
     </View>
