@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Vibration, Alert} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Fontisto';
 import WheelPicker from '../component/WheelPicker';
@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const TIMER_STORAGE_KEY = '@totalSeconds';
 const TARGET_DATE = '20231227';
+const PATTERN = 1000;
 
 export function HomeScreen() {
   const [seconds, setSeconds] = useState(0);
@@ -31,6 +32,16 @@ export function HomeScreen() {
         if (seconds !== 0) {
           setSeconds(prevSeconds => prevSeconds - 1);
         } else {
+          // 진동 추가
+          Vibration.vibrate(10 * PATTERN);
+          Alert.alert('공부 완료', '지정하신 시간을 완료했습니다.', [
+            {
+              text: '장하다!',
+              onPress: () => {
+                Vibration.cancel();
+              },
+            },
+          ]);
           handleReset();
         }
       }, 1000);
