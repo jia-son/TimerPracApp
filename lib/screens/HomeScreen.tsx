@@ -37,7 +37,19 @@ export function HomeScreen() {
 
   const saveToTalSeconds = async (toSecond: number) => {
     try {
-      await AsyncStorage.setItem(TIMER_STORAGE_KEY, JSON.stringify(toSecond));
+      const storeTimeGet = await AsyncStorage.getItem(TIMER_STORAGE_KEY);
+      if (storeTimeGet!.length === 0) {
+        setTotalSeconds({['20231227']: {seconds: toSecond}});
+      } else {
+        const json = JSON.parse(storeTimeGet ?? '[]');
+        const newSconds = toSecond + json['20231227'].seconds;
+        setTotalSeconds({['20231227']: {seconds: newSconds}});
+      }
+
+      await AsyncStorage.setItem(
+        TIMER_STORAGE_KEY,
+        JSON.stringify(totalSeconds),
+      );
     } catch (e) {
       console.log(e);
     }
