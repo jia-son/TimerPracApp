@@ -7,67 +7,61 @@ import {BottomMenuBar} from './BottomMenuBar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const TIMER_STORAGE_KEY = '@totalSeconds';
+const TARGET_DATE = '20231227';
 
 export function HomeScreen() {
   const [seconds, setSeconds] = useState(0);
   const [isActive, setIsActive] = useState(false);
-  const [initailTime, setInitilaTime] = useState(0);
-
-  const [totalSeconds, setTotalSeconds] = useState<{
-    [key: string]: {seconds: number};
-  }>({});
-  const [totlaTime, setTotalTime] = useState(0);
+  const [initialTime, setInitialTime] = useState(0);
 
   useEffect(() => {
-    var interval: any;
-    // const clearAll = async () => {
-    //   try {
-    //     await AsyncStorage.clear();
-    //   } catch (e) {
-    //     // clear error
-    //   }
-
-    //   console.log('Done.');
-    // };
-    // clearAll();
+    let interval: any;
 
     if (isActive) {
       interval = setInterval(() => {
         if (seconds !== 0) {
           setSeconds(prevSeconds => prevSeconds - 1);
         } else {
-          setTotalTime(totlaTime + initailTime);
-          addTotalSecond();
           handleReset();
         }
       }, 1000);
     } else {
       clearInterval(interval);
     }
+
     return () => clearInterval(interval);
   }, [isActive, seconds]);
 
-  const addTotalSecond = async () => {
-    // const newTotalSeconds = Object.assign({}, totalSeconds, {
-    //   ['20231227']: {seconds: totalSeconds['20231227'].seconds + initailTime},
-    // });
-    const newTotalSeconds = {
-      ...totalSeconds,
-      ['20231227']: {
-        ...totalSeconds['20231227'],
-        seconds: totlaTime,
-      },
-    };
-
-    setTotalSeconds(newTotalSeconds);
-    await saveToTalSeconds(newTotalSeconds);
+  const handleReset = async () => {
+    saveTotalSeconds();
+    setSeconds(initialTime);
+    setIsActive(false);
   };
 
-  const saveToTalSeconds = async (toSecond: any) => {
+  const timeSetting = (time: number) => {
+    setSeconds(time);
+    setInitialTime(time);
+  };
+
+  const saveTotalSeconds = async () => {
     try {
-      await AsyncStorage.setItem(TIMER_STORAGE_KEY, JSON.stringify(toSecond));
-    } catch (e) {
-      console.log(e);
+      const storedTotalSeconds = await AsyncStorage.getItem(TIMER_STORAGE_KEY);
+      const parsedTotalSeconds = storedTotalSeconds
+        ? JSON.parse(storedTotalSeconds)
+        : {};
+      const totalSecondsToUpdate = {
+        ...parsedTotalSeconds,
+        [TARGET_DATE]: {
+          seconds:
+            (parsedTotalSeconds[TARGET_DATE]?.seconds || 0) + initialTime,
+        },
+      };
+      await AsyncStorage.setItem(
+        TIMER_STORAGE_KEY,
+        JSON.stringify(totalSecondsToUpdate),
+      );
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -89,18 +83,8 @@ export function HomeScreen() {
     }
   };
 
-  const timeSetting = (time: number) => {
-    setSeconds(time);
-    setInitilaTime(time);
-  };
-
   const handleIsActive = () => {
     setIsActive(!isActive);
-  };
-
-  const handleReset = () => {
-    timeSetting(initailTime);
-    setIsActive(false);
   };
 
   return (

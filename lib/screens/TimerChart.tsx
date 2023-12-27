@@ -4,32 +4,24 @@ import {BottomMenuBar} from './BottomMenuBar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const TIMER_STORAGE_KEY = '@totalSeconds';
+const TARGET_DATE = '20231227';
 
 export function TimerChart() {
   const [totalTime, setTotalTime] = useState(0);
-  const [totalSeconds, setTotalSeconds] = useState<{
-    [key: string]: {seconds: number};
-  }>({});
+
+  useEffect(() => {
+    loadTotalSeconds();
+  }, []);
 
   const loadTotalSeconds = async () => {
     try {
-      const storeTimeGet = await AsyncStorage.getItem(TIMER_STORAGE_KEY);
-      //   const parsedTotalSeconds = JSON.parse(storeTimeGet ?? '{}');
-      //   setTotalSeconds(parsedTotalSeconds);
-      //   setTotalTime(parsedTotalSeconds['20231227']?.seconds || 0);
-      //   console.log('저장된 시간:', parsedTotalSeconds);
-
-      if (storeTimeGet?.length === 0) {
-        setTotalSeconds({});
-        setTotalTime(0);
-      } else {
-        setTotalSeconds(JSON.parse(storeTimeGet!));
-        setTotalTime(0);
-        console.log('우리 좋았잖아:', totalSeconds);
-        console.log('아니야?:', totalTime);
-      }
-    } catch (e) {
-      console.log(e);
+      const storedTotalSeconds = await AsyncStorage.getItem(TIMER_STORAGE_KEY);
+      const parsedTotalSeconds = storedTotalSeconds
+        ? JSON.parse(storedTotalSeconds)
+        : {};
+      setTotalTime(parsedTotalSeconds[TARGET_DATE]?.seconds || 0);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -37,23 +29,10 @@ export function TimerChart() {
     const minutes = Math.floor(totalTime / 60);
     const remainingSeconds = totalTime % 60;
 
-    if (minutes > 59) {
-      const hour = Math.floor(minutes / 60);
-      const minute = minutes % 60;
-      return `${String(hour).padStart(2, '0')}시간 ${String(minute).padStart(
-        2,
-        '0',
-      )}분 ${String(remainingSeconds).padStart(2, '0')}초`;
-    } else {
-      return `${String(minutes).padStart(2, '0')}분 ${String(
-        remainingSeconds,
-      ).padStart(2, '0')}초`;
-    }
+    return `${String(minutes).padStart(2, '0')}분 ${String(
+      remainingSeconds,
+    ).padStart(2, '0')}초`;
   };
-
-  useEffect(() => {
-    loadTotalSeconds();
-  }, []);
 
   return (
     <View style={styles.mainContainer}>
